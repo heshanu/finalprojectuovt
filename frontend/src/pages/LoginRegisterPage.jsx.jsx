@@ -30,7 +30,6 @@ const LoginRegisterPage = () => {
 
   // Validation schema for register form
   const registerValidationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
     username: Yup.string()
       .min(3, "Username must be at least 3 characters")
       .max(20, "Username must be at most 20 characters")
@@ -260,11 +259,10 @@ const LoginRegisterPage = () => {
                       Create Account
                     </h2>
                     <p className="text-gray-300 text-sm mb-8">
-                      Join our community of travelers
+                      Join our community of travel guiders
                     </p>
                     <Formik
                       initialValues={{
-                        name: "",
                         username: "",
                         password: "",
                         confirmPassword: "",
@@ -283,34 +281,6 @@ const LoginRegisterPage = () => {
                     >
                       {({ isSubmitting, errors, touched, validateForm }) => (
                         <Form className="space-y-5">
-                          {/* Name Field */}
-                          <div>
-                            <label className="block text-white text-sm font-medium mb-2">
-                              Name
-                            </label>
-                            <div className="relative">
-                              <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                              <Field
-                                type="text"
-                                name="name"
-                                placeholder="John Doe"
-                                className={`w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border ${
-                                  errors.name && touched.name
-                                    ? "border-red-500"
-                                    : "border-white/20"
-                                } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition`}
-                                onBlur={async () => {
-                                  await validateForm();
-                                  if (errors.name) toast.error(errors.name);
-                                }}
-                              />
-                            </div>
-                            <ErrorMessage
-                              name="name"
-                              component="div"
-                              className="text-red-500 text-sm mt-1"
-                            />
-                          </div>
                           {/* Username Field */}
                           <div>
                             <label className="block text-white text-sm font-medium mb-2">
@@ -322,22 +292,14 @@ const LoginRegisterPage = () => {
                                 type="text"
                                 name="username"
                                 placeholder="Enter your username"
-                                className={`w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border ${
+                                 className={`w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border ${
                                   errors.username && touched.username
                                     ? "border-red-500"
                                     : "border-white/20"
-                                } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition`}
-                                onBlur={async () => {
-                                  await validateForm();
-                                  if (errors.username) toast.error(errors.username);
-                                }}
+                                } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition`}
+                              
                               />
                             </div>
-                            <ErrorMessage
-                              name="username"
-                              component="div"
-                              className="text-red-500 text-sm mt-1"
-                            />
                           </div>
                           {/* Password Field */}
                           <div>
@@ -350,15 +312,12 @@ const LoginRegisterPage = () => {
                                 type={showPassword ? "text" : "password"}
                                 name="password"
                                 placeholder="••••••••"
-                                className={`w-full pl-10 pr-12 py-3 rounded-lg bg-white/10 border ${
-                                  errors.password && touched.password
+                                 className={`w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border ${
+                                  errors.username && touched.username
                                     ? "border-red-500"
                                     : "border-white/20"
-                                } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition`}
-                                onBlur={async () => {
-                                  await validateForm();
-                                  if (errors.password) toast.error(errors.password);
-                                }}
+                                } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition`}
+                              
                               />
                               <button
                                 type="button"
@@ -372,11 +331,7 @@ const LoginRegisterPage = () => {
                                 )}
                               </button>
                             </div>
-                            <ErrorMessage
-                              name="password"
-                              component="div"
-                              className="text-red-500 text-sm mt-1"
-                            />
+                            
                           </div>
                           {/* Confirm Password Field */}
                           <div>
@@ -389,15 +344,11 @@ const LoginRegisterPage = () => {
                                 type={showConfirmPassword ? "text" : "password"}
                                 name="confirmPassword"
                                 placeholder="••••••••"
-                                className={`w-full pl-10 pr-12 py-3 rounded-lg bg-white/10 border ${
-                                  errors.confirmPassword && touched.confirmPassword
+                                className={`w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border ${
+                                  errors.username && touched.username
                                     ? "border-red-500"
                                     : "border-white/20"
-                                } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition`}
-                                onBlur={async () => {
-                                  await validateForm();
-                                  if (errors.confirmPassword) toast.error(errors.confirmPassword);
-                                }}
+                                } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition`}
                               />
                               <button
                                 type="button"
@@ -411,16 +362,22 @@ const LoginRegisterPage = () => {
                                 )}
                               </button>
                             </div>
-                            <ErrorMessage
+                            {/* <ErrorMessage
                               name="confirmPassword"
                               component="div"
                               className="text-red-500 text-sm mt-1"
-                            />
+                            /> */}
                           </div>
                           {/* Sign Up Button */}
                           <button
                             type="submit"
                             disabled={isSubmitting}
+                            onClick={async () => {
+                                   await validateForm();
+                                   if(errors.username) toast.error(errors.username);
+                                   if (errors.password) toast.error(errors.password);
+                                   if (errors.confirmPassword) toast.error(errors.confirmPassword);
+                                 }}
                             className="w-full bg-gradient-to-r from-emerald-400 to-cyan-500 hover:from-emerald-300 hover:to-cyan-400 text-white font-semibold py-3 rounded-lg transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                           >
                             {isSubmitting ? "Registering..." : "Create Account"}
