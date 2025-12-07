@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Lock, User, MapPin, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Lock, User, MapPinned, Eye, EyeOff, ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -14,34 +14,41 @@ const LoginRegisterPage = () => {
     username: Yup.string()
       .min(3, "Username must be at least 3 characters")
       .max(20, "Username must be at most 20 characters")
-      .matches(/^[a-zA-Z0-9_-]+$/, "Invalid username (only letters, numbers, _, -)")
-      ,
-    password: Yup.string()
-      .min(8, "Password must be at least 8 characters")
       .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
-        "Password must contain uppercase, lowercase, number, and special character"
+        /^[a-zA-Z0-9_-]+$/,
+        "Invalid username (only letters, numbers, _, -)"
       )
-      
-  });
-
-  // Validation schema for register form
-  const registerValidationSchema = Yup.object().shape({
-    name: Yup.string(),
-    username: Yup.string()
-      .min(3, "Username must be at least 3 characters")
-      .max(20, "Username must be at most 20 characters")
-      .matches(/^[a-zA-Z0-9_-]+$/, "Invalid username (only letters, numbers, _, -)")
       .required("Username is required"),
     password: Yup.string()
       .min(8, "Password must be at least 8 characters")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
         "Password must contain uppercase, lowercase, number, and special character"
-      ),
+      )
+      .required("Password is required"),
+  });
+
+  // Validation schema for register form
+  const registerValidationSchema = Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+    username: Yup.string()
+      .min(3, "Username must be at least 3 characters")
+      .max(20, "Username must be at most 20 characters")
+      .matches(
+        /^[a-zA-Z0-9_-]+$/,
+        "Invalid username (only letters, numbers, _, -)"
+      )
+      .required("Username is required"),
+    password: Yup.string()
+      .min(8, "Password must be at least 8 characters")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
+        "Password must contain uppercase, lowercase, number, and special character"
+      )
+      .required("Password is required"),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
-      
+      .required("Confirm Password is required"),
   });
 
   const toggleMode = () => {
@@ -56,18 +63,18 @@ const LoginRegisterPage = () => {
         <div className="absolute top-40 right-10 w-72 h-72 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
         <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
       </div>
-
       {/* Main Container */}
       <div className="relative w-full max-w-4xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left Side - Branding & Info */}
           <div className="text-white order-2 md:order-1 flex flex-col justify-center">
             <div className="flex items-center gap-2 mb-4">
-              <MapPin className="w-8 h-8 text-cyan-400" />
+              <MapPinned className="w-8 h-8 text-cyan-400" />
               <h1 className="text-3xl md:text-4xl font-bold">GuideBuddy</h1>
             </div>
             <p className="text-gray-300 text-lg mb-8">
-              Discover amazing destinations and share your travel stories with fellow adventurers.
+              Discover amazing destinations and share your travel stories with
+              fellow tourist guiders.
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
@@ -75,8 +82,12 @@ const LoginRegisterPage = () => {
                   <ArrowRight className="w-5 h-5 text-cyan-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Explore Destinations</h3>
-                  <p className="text-sm text-gray-400">Find hidden gems and popular attractions</p>
+                  <h3 className="font-semibold text-white">
+                    Explore Destinations
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    Find hidden gems and popular attractions
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -84,8 +95,12 @@ const LoginRegisterPage = () => {
                   <ArrowRight className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Share Experiences</h3>
-                  <p className="text-sm text-gray-400">Connect with other travelers worldwide</p>
+                  <h3 className="font-semibold text-white">
+                    Share Experiences
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    Connect with other tourist guiders worldwide
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -93,13 +108,16 @@ const LoginRegisterPage = () => {
                   <ArrowRight className="w-5 h-5 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Plan Your Journey</h3>
-                  <p className="text-sm text-gray-400">Create itineraries and save your favorites</p>
+                  <h3 className="font-semibold text-white">
+                    Plan Your Journey
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    Create itineraries and save your favorites
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-
           {/* Right Side - Auth Forms */}
           <div className="order-1 md:order-2">
             <div className="relative h-full">
@@ -114,22 +132,33 @@ const LoginRegisterPage = () => {
                   }`}
                 >
                   <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl">
-                    <h2 className="text-2xl font-bold text-white mb-2">Welcome Back</h2>
-                    <p className="text-gray-300 text-sm mb-8">Log in to continue your travel journey</p>
-
+                    <h2 className="text-2xl font-bold text-white mb-2">
+                      Welcome Back
+                    </h2>
+                    <p className="text-gray-300 text-sm mb-8">
+                      Log in to continue your travel journey
+                    </p>
                     <Formik
                       initialValues={{ username: "", password: "" }}
                       validationSchema={loginValidationSchema}
-                      onSubmit={(values, { setSubmitting }) => {
-                        toast.success("Logged in successfully!");
-                        setSubmitting(false);
+                      onSubmit={async (values, { setSubmitting }) => {
+                        try {
+                          await loginValidationSchema.validate(values, { abortEarly: false });
+                          toast.success("Logged in successfully!");
+                        } catch (err) {
+                          err.inner.forEach((error) => toast.error(error.message));
+                        } finally {
+                          setSubmitting(false);
+                        }
                       }}
                     >
-                      {({ isSubmitting, errors, touched }) => (
+                      {({ isSubmitting, errors, touched, validateForm }) => (
                         <Form className="space-y-5">
                           {/* Username Field */}
                           <div>
-                            <label className="block text-white text-sm font-medium mb-2">Username</label>
+                            <label className="block text-white text-sm font-medium mb-2">
+                              Username
+                            </label>
                             <div className="relative">
                               <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
                               <Field
@@ -137,53 +166,66 @@ const LoginRegisterPage = () => {
                                 name="username"
                                 placeholder="Enter your username"
                                 className={`w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border ${
-                                  errors.username && touched.username ? "border-red-500" : "border-white/20"
+                                  errors.username && touched.username
+                                    ? "border-red-500"
+                                    : "border-white/20"
                                 } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition`}
                               />
                             </div>
-                            <ErrorMessage
-                              name="username"
-                              component="div"
-                              className="text-red-500 text-sm mt-1"
-                            />
+                            
                           </div>
-
                           {/* Password Field */}
                           <div>
-                            <label className="block text-white text-sm font-medium mb-2">Password</label>
+                            <label className="block text-white text-sm font-medium mb-2">
+                              Password
+                            </label>
                             <div className="relative">
                               <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
                               <Field
                                 type={showPassword ? "text" : "password"}
                                 name="password"
                                 placeholder="••••••••"
-                                className={`w-full pl-10 pr-12 py-3 rounded-lg bg-white/10 border `}></Field>
+                                className={`w-full pl-10 pr-12 py-3 rounded-lg bg-white/10 border ${
+                                  errors.password && touched.password
+                                    ? "border-red-500"
+                                    : "border-white/20"
+                                } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition`}
+                                // onClick={async () => {
+                                //   await validateForm();
+                                //   if (errors.password) toast.error(errors.password);
+                                // }}
+                              />
                               <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-3.5 text-gray-400 hover:text-white transition"
                               >
-                                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                {showPassword ? (
+                                  <EyeOff className="w-5 h-5" />
+                                ) : (
+                                  <Eye className="w-5 h-5" />
+                                )}
                               </button>
                             </div>
-                            <ErrorMessage
-                              name="password"
-                              component="div"
-                              className="text-red-500 text-sm mt-1"
-                            />
                           </div>
-
                           {/* Remember & Forgot */}
                           <div className="flex items-center justify-end text-sm">
-                            <a href="#" className="text-cyan-400 hover:text-cyan-300 transition">
+                            <a
+                              href="#"
+                              className="text-cyan-400 hover:text-cyan-300 transition"
+                            >
                               Forgot Password?
                             </a>
                           </div>
-
                           {/* Login Button */}
                           <button
                             type="submit"
                             disabled={isSubmitting}
+                            onClick={async () => {
+                                   await validateForm();
+                                   if(errors.username) toast.error(errors.username);
+                                    if (errors.password) {toast.error(errors.password);}
+                                }}
                             className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-white font-semibold py-3 rounded-lg transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                           >
                             {isSubmitting ? "Logging in..." : "Log In"}
@@ -192,7 +234,6 @@ const LoginRegisterPage = () => {
                         </Form>
                       )}
                     </Formik>
-
                     {/* Toggle to Register */}
                     <p className="text-center text-gray-300 text-sm mt-4">
                       Don't have an account?{" "}
@@ -206,7 +247,6 @@ const LoginRegisterPage = () => {
                     </p>
                   </div>
                 </div>
-
                 {/* Register Form */}
                 <div
                   className={`transition-all duration-500 transform ${
@@ -216,28 +256,66 @@ const LoginRegisterPage = () => {
                   }`}
                 >
                   <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl">
-                    <h2 className="text-2xl font-bold text-white mb-2">Create Account</h2>
-                    <p className="text-gray-300 text-sm mb-8">Join our community of travelers</p>
-
+                    <h2 className="text-2xl font-bold text-white mb-2">
+                      Create Account
+                    </h2>
+                    <p className="text-gray-300 text-sm mb-8">
+                      Join our community of travelers
+                    </p>
                     <Formik
                       initialValues={{
-                      
+                        name: "",
                         username: "",
                         password: "",
                         confirmPassword: "",
                       }}
                       validationSchema={registerValidationSchema}
-                      onSubmit={(values, { setSubmitting }) => {
-                        toast.success("Registered successfully!");
-                        setSubmitting(false);
+                      onSubmit={async (values, { setSubmitting }) => {
+                        try {
+                          await registerValidationSchema.validate(values, { abortEarly: false });
+                          toast.success("Registered successfully!");
+                        } catch (err) {
+                          err.inner.forEach((error) => toast.error(error.message));
+                        } finally {
+                          setSubmitting(false);
+                        }
                       }}
                     >
-                      {({ isSubmitting, errors, touched }) => (
+                      {({ isSubmitting, errors, touched, validateForm }) => (
                         <Form className="space-y-5">
-                          
+                          {/* Name Field */}
+                          <div>
+                            <label className="block text-white text-sm font-medium mb-2">
+                              Name
+                            </label>
+                            <div className="relative">
+                              <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                              <Field
+                                type="text"
+                                name="name"
+                                placeholder="John Doe"
+                                className={`w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border ${
+                                  errors.name && touched.name
+                                    ? "border-red-500"
+                                    : "border-white/20"
+                                } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition`}
+                                onBlur={async () => {
+                                  await validateForm();
+                                  if (errors.name) toast.error(errors.name);
+                                }}
+                              />
+                            </div>
+                            <ErrorMessage
+                              name="name"
+                              component="div"
+                              className="text-red-500 text-sm mt-1"
+                            />
+                          </div>
                           {/* Username Field */}
                           <div>
-                            <label className="block text-white text-sm font-medium mb-2">Username</label>
+                            <label className="block text-white text-sm font-medium mb-2">
+                              Username
+                            </label>
                             <div className="relative">
                               <User className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
                               <Field
@@ -245,8 +323,14 @@ const LoginRegisterPage = () => {
                                 name="username"
                                 placeholder="Enter your username"
                                 className={`w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border ${
-                                  errors.username && touched.username ? "border-red-500" : "border-white/20"
+                                  errors.username && touched.username
+                                    ? "border-red-500"
+                                    : "border-white/20"
                                 } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition`}
+                                onBlur={async () => {
+                                  await validateForm();
+                                  if (errors.username) toast.error(errors.username);
+                                }}
                               />
                             </div>
                             <ErrorMessage
@@ -255,10 +339,11 @@ const LoginRegisterPage = () => {
                               className="text-red-500 text-sm mt-1"
                             />
                           </div>
-
                           {/* Password Field */}
                           <div>
-                            <label className="block text-white text-sm font-medium mb-2">Password</label>
+                            <label className="block text-white text-sm font-medium mb-2">
+                              Password
+                            </label>
                             <div className="relative">
                               <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
                               <Field
@@ -266,15 +351,25 @@ const LoginRegisterPage = () => {
                                 name="password"
                                 placeholder="••••••••"
                                 className={`w-full pl-10 pr-12 py-3 rounded-lg bg-white/10 border ${
-                                  errors.password && touched.password ? "border-red-500" : "border-white/20"
+                                  errors.password && touched.password
+                                    ? "border-red-500"
+                                    : "border-white/20"
                                 } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition`}
+                                onBlur={async () => {
+                                  await validateForm();
+                                  if (errors.password) toast.error(errors.password);
+                                }}
                               />
                               <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-3.5 text-gray-400 hover:text-white transition"
                               >
-                                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                {showPassword ? (
+                                  <EyeOff className="w-5 h-5" />
+                                ) : (
+                                  <Eye className="w-5 h-5" />
+                                )}
                               </button>
                             </div>
                             <ErrorMessage
@@ -283,10 +378,11 @@ const LoginRegisterPage = () => {
                               className="text-red-500 text-sm mt-1"
                             />
                           </div>
-
                           {/* Confirm Password Field */}
                           <div>
-                            <label className="block text-white text-sm font-medium mb-2">Confirm Password</label>
+                            <label className="block text-white text-sm font-medium mb-2">
+                              Confirm Password
+                            </label>
                             <div className="relative">
                               <Lock className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
                               <Field
@@ -294,15 +390,25 @@ const LoginRegisterPage = () => {
                                 name="confirmPassword"
                                 placeholder="••••••••"
                                 className={`w-full pl-10 pr-12 py-3 rounded-lg bg-white/10 border ${
-                                  errors.confirmPassword && touched.confirmPassword ? "border-red-500" : "border-white/20"
+                                  errors.confirmPassword && touched.confirmPassword
+                                    ? "border-red-500"
+                                    : "border-white/20"
                                 } text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition`}
+                                onBlur={async () => {
+                                  await validateForm();
+                                  if (errors.confirmPassword) toast.error(errors.confirmPassword);
+                                }}
                               />
                               <button
                                 type="button"
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 className="absolute right-3 top-3.5 text-gray-400 hover:text-white transition"
                               >
-                                {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                {showConfirmPassword ? (
+                                  <EyeOff className="w-5 h-5" />
+                                ) : (
+                                  <Eye className="w-5 h-5" />
+                                )}
                               </button>
                             </div>
                             <ErrorMessage
@@ -311,7 +417,6 @@ const LoginRegisterPage = () => {
                               className="text-red-500 text-sm mt-1"
                             />
                           </div>
-
                           {/* Sign Up Button */}
                           <button
                             type="submit"
@@ -324,7 +429,6 @@ const LoginRegisterPage = () => {
                         </Form>
                       )}
                     </Formik>
-
                     {/* Toggle to Login */}
                     <p className="text-center text-gray-300 text-sm mt-4">
                       Already have an account?{" "}
