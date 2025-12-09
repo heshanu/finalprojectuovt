@@ -1,15 +1,9 @@
 const dotenv=require('dotenv');
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user');
-const customerRoutes = require('./routes/customer');
-const employeeRoutes = require('./routes/employee');
-const warrantyRoutes = require('./routes/warranty');
-const repairRoutes = require('./routes/repair');
-const supplierRoutes = require('./routes/supplier');
-const taskRoutes = require('./routes/task');
+const guideRoutes = require('./routes/guide');
 const sendmailRoutes = require('./routes/sendmail');
 const app = express();
 const port = (process.env.SERVER_PORT || 5000);
@@ -41,7 +35,7 @@ app.use((req, res, next) => {
 // Middleware
 app.use(cors({
   origin: [
-    'https://taskflowpro-one.vercel.app',   // Production
+    'https://finalprojectuovt-snowy.vercel.app',   // Production
     'http://localhost:3000',                // Development
   ],
   credentials: true,
@@ -80,13 +74,7 @@ app.get("/",(req,res)=>
 
 // Routes
 app.use('/api/users', userRoutes);
-app.use('/api/customers', customerRoutes);
-app.use('/api/employees', employeeRoutes);
-app.use('/api/warranty', warrantyRoutes);
-app.use('/api/repairs', repairRoutes);
-app.use('/api/suppliers', supplierRoutes);
-app.use('/api/tasks', taskRoutes);
-app.use('/api/notify', sendmailRoutes);
+app.use('/api/guides', guideRoutes);
 
 // 404 Not Found handler
 app.use((req, res, next) => { 
