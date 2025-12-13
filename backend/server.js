@@ -1,17 +1,18 @@
+const mongoose = require("mongoose");
 const dotenv=require('dotenv');
 const express = require("express");
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user');
-const guideRoutes = require('./routes/guide');
-const sendmailRoutes = require('./routes/sendmail');
+const customerRoutes = require('./routes/customer');
+const planeRoutes=require('./routes/travelplan')
 const app = express();
-const port = (process.env.SERVER_PORT || 5000);
+const port = (process.env.SERVER_PORT || 3001);
 
 dotenv.config();
 
 // Add environment variables validation
-const requiredEnvVars = ['MONGODB_URL', 'JWT_SECRET', 'EMAIL_USER', 'EMAIL_PASS'];
+const requiredEnvVars = ['MONGODB_URL', 'JWT_SECRET'];
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
     console.error(`Missing required environment variable: ${envVar}`);
@@ -50,12 +51,9 @@ app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 //Connect to MongoDB
 const DATABASE_URL = process.env.MONGODB_URL;
 
-mongoose.connect(DATABASE_URL, {useNewUrlParser: true,useUnifiedTopology: true})
-  .then(() => console.log("MongoDB Connected~"))
-  .catch(err => {
-    console.error("MongoDB connection error:", err);
-    process.exit(1);
-  });
+mongoose.connect(DATABASE_URL)
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.error("MongoDB connection error:", err));
 
 const connection = mongoose.connection;
 
@@ -74,8 +72,8 @@ app.get("/",(req,res)=>
 
 // Routes
 app.use('/api/users', userRoutes);
-app.use('/api/guides', guideRoutes);
-
+app.use('/api/Customers', customerRoutes);
+app.use('/api/plan',planeRoutes);
 // 404 Not Found handler
 app.use((req, res, next) => { 
   res.status(404).json({ 

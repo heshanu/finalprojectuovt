@@ -1,11 +1,11 @@
 const express = require("express");
-const Guide = require("../../models/Guide")
+const Customer = require("../models/Customer")
 const router = express.Router();
 
 // Get all guides
-router.get("/getGuide", async (req, res) => {
+router.get("/getCustomer", async (req, res) => {
   try {
-    const customers = await Guide.find();
+    const customers = await Customer.find();
     res.json(customers);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -13,11 +13,11 @@ router.get("/getGuide", async (req, res) => {
 });
 
 // Create new customer
-router.post("/addGuide", async (req, res) => {
+router.post("/addCustomer", async (req, res) => {
   try {
-    const customer = new Guide(req.body);
+    const customer = new Customer(req.body);
     // Validate required fields
-    if (!customer.customerName) {
+    if (!customer.name) {
       return res.status(400).json({
         error: "Customer Name is required",
       });
@@ -28,22 +28,22 @@ router.post("/addGuide", async (req, res) => {
       });
     }
     // Validate phone number
-    if (!customer.phoneNo) {
+    if (!customer.phonenumber) {
       return res.status(400).json({
         error: "Phone number is required",
       });
     }
    // Phone number format validation
       const phoneRegex = /^(07|09)\d{8}$/;
-      if (!phoneRegex.test(customer.phoneNo)) {
+      if (!phoneRegex.test(customer.phonenumber)) {
         return res.status(400).json({
           error:
             "Invalid phone number format. Must be 10 digits and start with 07 or 09",
         });
       }
       // Duplicate phone number check
-      const existingCustomerPhoneNo = await Guide.findOne({
-        phoneNo: customer.phoneNo,
+      const existingCustomerPhoneNo = await Customer.findOne({
+        phonenumbe: customer.phonenumber,
       });
       if (existingCustomerPhoneNo) {
         return res.status(409).json({
@@ -64,7 +64,7 @@ router.post("/addGuide", async (req, res) => {
       });
     }
     // Check for duplicate email
-    const existingCustomerEmail = await Guide.findOne({ email: customer.email });
+    const existingCustomerEmail = await Customer.findOne({ email: customer.email });
     if (existingCustomerEmail) {
       return res.status(409).json({
         error: "Email already exists",
@@ -81,21 +81,43 @@ router.post("/addGuide", async (req, res) => {
   }
 });
 
-// Get single customer
-router.get("/getGuidebyId/:id", async (req, res) => {
+// Get customers by User ID
+// Get ALL customers for a specific user
+router.get("/getCustomersByUser/:userId", async (req, res) => {
   try {
-    const customer = await Guide.findById(req.params.id);
-    if (!customer) return res.status(404).json({ error: "Customer not found" });
-    res.json(customer);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const { userId } = req.params;
+
+    const customers = await Customer.find({ User: userId });
+
+    res.status(200).json(customers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Update customer
-router.put("/updateGuide/:id", async (req, res) => {
+//get one customer by email
+// Get one customer by email
+router.get("/getCustomerByEmail/:email", async (req, res) => {
   try {
-    const customer = await Guide.findByIdAndUpdate(req.params.id, req.body, {
+    const { email } = req.params;
+
+    const customer = await Customer.findOne({ email });
+
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    res.status(200).json(customer);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+// Update customer
+router.put("/updateCustomer/:id", async (req, res) => {
+  try {
+    const customer = await Customer.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
     if (!customer) return res.status(404).json({ error: "Customer not found" });
@@ -106,9 +128,9 @@ router.put("/updateGuide/:id", async (req, res) => {
 });
 
 // Delete customer
-router.delete("/deleteGuide/:id", async (req, res) => {
+router.delete("/deleteCustomer/:id", async (req, res) => {
   try {
-    const customer = await Guide.findByIdAndDelete(req.params.id, req.body);
+    const customer = await Customer.findByIdAndDelete(req.params.id, req.body);
     if (!customer) return res.status(404).json({ error: "Customer not found" });
     res.json({ message: "Customer deleted successfully" });
   } catch (err) {

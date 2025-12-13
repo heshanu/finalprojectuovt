@@ -16,66 +16,74 @@ router.get("/", async (req, res) => {
 });
 
 //Regiter User
+// Register User
 router.post("/signup", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    //Check if username was entered
+    const { username,email, password, usertype } = req.body;
+
+     // Email validation
     if (!username) {
-      return res.status(400).json({
-        error: "Name is Required",
-      });
+      return res.status(400).json({ error: "USername is required" });
     }
-    //Check if email was entered
+    // Email validation
     if (!email) {
-      return res.status(400).json({ error: "Email is Required" });
+      return res.status(400).json({ error: "Email is required" });
     }
-    // Email format validation
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({
-        error: "Invalid email format",
-      });
+      return res.status(400).json({ error: "Invalid email format" });
     }
-    //Check Email
+
+    // Check existing user
     const exist = await User.findOne({ email });
-    //Check if username was entered
     if (exist) {
-      return res.status(409).json({
-        error: "Email is taken already",
-      });
+      return res.status(409).json({ error: "Email already exists" });
     }
- if (!password) {
-      return res.status(400).json({ error: "Password is Required" });
+
+    // Password validation
+    if (!password) {
+      return res.status(400).json({ error: "Password is required" });
     }
-    //Password validation
+
     const strongPasswordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-    if (!password || !strongPasswordRegex.test(password)) {
+
+    if (!strongPasswordRegex.test(password)) {
       return res.status(400).json({
         error:
-          "Password must be at least 6 characters long and include uppercase, lowercase, number, and special character.",
+          "Password must be at least 6 characters long and include uppercase, lowercase, number, and special character",
       });
     }
-    //Encrypt the password
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    //Create User
+    // Set usertype safely (default = guide)
+    const finalUserType = usertype === "admin" ? "admin" : "guide";
+
+    // Create user
     const user = await User.create({
       username,
       email,
       password: hashedPassword,
+      usertype: finalUserType,
     });
 
-    return res.json({
+    // Response
+    res.status(201).json({
       _id: user._id,
       username: user.username,
       email: user.email,
+      usertype: user.usertype,
     });
+
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 // User login with JWT
 router.post("/login", async (req, res) => {
