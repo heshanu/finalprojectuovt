@@ -1,9 +1,9 @@
 const express = require("express");
 const Customer = require("../models/Customer")
 const router = express.Router();
-
+const auth=require("../middleware/auth");
 // Get all guides
-router.get("/getCustomer", async (req, res) => {
+router.get("/getCustomer", auth,async (req, res) => {
   try {
     const customers = await Customer.find();
     res.json(customers);
