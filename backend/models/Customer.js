@@ -1,20 +1,24 @@
 const mongoose = require("mongoose");
 
 const customerSchema = new mongoose.Schema({
-name:String,
-phonenumber:String,
-age:Number,
-address:String,
-accomdation:String,
-travelmode:String,
-foodlist:String,
-beveragelist:String,
-duration:String,
-email:String,
-  User: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User" // Reference model
+  step: { type: Number, default: 0 },
+  data: {
+    name: String,
+    age: Number,
+    address: String,
+    foods: [String],
+    beverages: [String],
+    hotels: String,
+    mode_of_travel: String,
+    duration: String,
+    budget: String,
+    phonenumber: String,
+    email: String,
+    guideUsername: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
   }
-});
+}, { timestamps: true }); 
 
-module.exports = mongoose.model("Customer",customerSchema);
+module.exports = mongoose.model("Customer", customerSchema);
