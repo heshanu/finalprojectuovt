@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: touristmgt-api-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: touristmgt-api
+  template:
+    metadata:
+      labels:
+        app: touristmgt-api
+    spec:
+      containers:
+      - name: touristmgt-container
+        image: hecha/touristapp-backend:1.0 
+        ports:
+        - containerPort: 8082
+#using deployment we can create pod and versioning and control
+#deployments
