@@ -1,24 +1,24 @@
-const mongoose = require("mongoose");
+require("dotenv").config();
+const { MongoClient, ObjectId } = require("mongodb");
 
-const customerSchema = new mongoose.Schema({
-  step: { type: Number, default: 0 },
-  data: {
-    name: String,
-    age: Number,
-    address: String,
-    foods: [String],
-    beverages: [String],
-    hotels: String,
-    mode_of_travel: String,
-    duration: String,
-    budget: String,
-    phonenumber: String,
-    email: String,
-    guideUsername: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
-    }
+const uri = process.env.MONGODB_URL;
+
+if (!uri) {
+  throw new Error("MONGO_URI is not defined in your environment variables!");
+}
+
+// Just pass the URI; do NOT include useUnifiedTopology
+const client = new MongoClient(uri);
+
+let db;
+
+async function connectDB() {
+  if (!db) {
+    await client.connect();
+    db = client.db("semester6db"); // your database name
+    console.log("Connected to MongoDB");
   }
-}, { timestamps: true }); 
+  return db;
+}
 
-module.exports = mongoose.model("Customer", customerSchema);
+module.exports = { connectDB, ObjectId };

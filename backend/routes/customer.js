@@ -1,11 +1,17 @@
 const express = require("express");
-const Customer = require("../models/Customer")
+const {
+  getAllCustomers,
+  getCustomerById,
+  createCustomer,
+  updateCustomer,
+  deleteCustomer
+} = require("../models/customerController");
 const router = express.Router();
 const auth=require("../middleware/auth");
 // Get all guides
 router.get("/getCustomer", auth,async (req, res) => {
   try {
-    const customers = await Customer.find();
+    const customers = await getAllCustomers();
     res.json(customers);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -15,7 +21,7 @@ router.get("/getCustomer", auth,async (req, res) => {
 // Create new customer
 router.post("/addCustomer", async (req, res) => {
   try {
-    const customer = new Customer(req.body);
+    const customer = new createCustomer(req.body);
     // Validate required fields
     if (!customer.name) {
       return res.status(400).json({
@@ -61,13 +67,6 @@ router.post("/addCustomer", async (req, res) => {
     if (!emailRegex.test(customer.email)) {
       return res.status(400).json({
         error: "Invalid email format",
-      });
-    }
-    // Check for duplicate email
-    const existingCustomerEmail = await Customer.findOne({ email: customer.email });
-    if (existingCustomerEmail) {
-      return res.status(409).json({
-        error: "Email already exists",
       });
     }
 
@@ -128,14 +127,24 @@ router.put("/updateCustomer/:id", async (req, res) => {
 });
 
 // Delete customer
+// Delete customer
 router.delete("/deleteCustomer/:id", async (req, res) => {
   try {
-    const customer = await Customer.findByIdAndDelete(req.params.id, req.body);
-    if (!customer) return res.status(404).json({ error: "Customer not found" });
+    const id = req.params.id;
+    
+    // Call your delete function
+    const result = await deleteCustomer(id);
+
+    // result.deletedCount === 0 means nothing was deleted
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Customer not found" });
+    }
+
     res.json({ message: "Customer deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 module.exports = router;
