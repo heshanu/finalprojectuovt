@@ -149,6 +149,17 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.delete("/deleteuser/:id", async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id, req.body);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 // Reset password route
 router.post("/reset-password", auth, async (req, res) => {
   try {
@@ -186,5 +197,6 @@ router.post("/reset-password", auth, async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
 
 module.exports = router;
